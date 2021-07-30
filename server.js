@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.route('/').get((req, res) => {
-  res.render('pug/index');
+  res.render('pug/index', {title: 'Hello', message: 'Please login', showLogin: true});
 });
 
 const PORT = process.env.PORT || 8080;
