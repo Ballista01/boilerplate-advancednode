@@ -15,7 +15,7 @@ app.set('view engine', 'pug');
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: true,
-  saveUninitialized: true, 
+  saveUninitialized: true,
   cookie: { secure: false },
 }))
 
@@ -24,18 +24,9 @@ passport.initialize();
 app.use(passport.initialize());
 passport.session();
 
-passport.serializeUser((id, done) => {
-  done(null, user._id);
-});
-passport.deserializeUser((id, done) => {
-  myDataBase.findOne({ _id: new ObjectID(id) }, (err, doc) => {
-    done(null, doc);
-  })
-})
-
 myDB(async client => {
   const myDateBase = await client.db('database').collection('users');
-  console.log('myDateBase:'+myDateBase.toString());
+  console.log('myDateBase:' + myDateBase.toString());
 
   app.route('/').get((req, res) => {
     res.render('pug', {
@@ -45,6 +36,15 @@ myDB(async client => {
   })
 
   // Serialization and deserialization here...
+  passport.serializeUser((id, done) => {
+    done(null, user._id);
+  });
+  passport.deserializeUser((id, done) => {
+    myDataBase.findOne({ _id: new ObjectID(id) }, (err, doc) => {
+      done(null, doc);
+    })
+  });
+
 
 
 }).catch(e => {
@@ -59,7 +59,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.route('/').get((req, res) => {
-  res.render('pug/index', {title: 'Hello', message: 'Please login'});
+  res.render('pug/index', { title: 'Hello', message: 'Please login' });
 });
 
 const PORT = process.env.PORT || 8080;
