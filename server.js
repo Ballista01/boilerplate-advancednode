@@ -33,6 +33,25 @@ passport.deserializeUser((id, done) => {
   // })
 })
 
+myDB(async client => {
+  const myDateBase = await client.db('database').collection('users');
+
+  app.route('/').get((req, res) => {
+    res.render('pug', {
+      title: 'Connected to Database',
+      message: 'Please login',
+    })
+  })
+
+  // Serialization and deserialization here...
+
+
+}).catch(e => {
+  app.route('/').get((req, res) => {
+    res.render('pug', { title: e, message: 'Unable to login' });
+  });
+});
+
 fccTesting(app); //For FCC testing purposes
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(express.json());
