@@ -29,12 +29,13 @@ passport.serializeUser((id, done) => {
 });
 passport.deserializeUser((id, done) => {
   myDataBase.findOne({ _id: new ObjectID(id) }, (err, doc) => {
-    done(null, null);
+    done(null, doc);
   })
 })
 
 myDB(async client => {
   const myDateBase = await client.db('database').collection('users');
+  console.log('myDateBase:'+myDateBase.toString());
 
   app.route('/').get((req, res) => {
     res.render('pug', {
