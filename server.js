@@ -22,7 +22,7 @@ app.use(session({
 // initialize passport
 passport.initialize();
 app.use(passport.initialize());
-passport.session();
+app.use(passport.session());
 
 myDB(async client => {
   const myDateBase = await client.db('database').collection('users');
@@ -58,9 +58,9 @@ app.use('/public', express.static(process.cwd() + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.route('/').get((req, res) => {
-  res.render('pug/index', { title: 'Hello', message: 'Please login' });
-});
+// app.route('/').get((req, res) => {
+//   res.render('pug/index', { title: 'Hello', message: 'Please login' });
+// });
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
