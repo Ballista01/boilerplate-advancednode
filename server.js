@@ -87,7 +87,7 @@ app.route('/profile').get(ensureAuthenticated, (req, res) => {
     username: req.user.username,
   });
 })
-app.route('logout').get((req, res)=>{
+app.route('/logout').get((req, res)=>{
   req.logout();
   res.redirect('/');
 })
