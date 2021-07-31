@@ -74,10 +74,16 @@ app.route('/login').post(passport.authenticate('local', { failureRedirect: '/' }
   console.log('POST routed!');
   res.redirect('/profile');
 });
-app.get('/profile', (req, res) => {
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/');
+}
+app.route('/profile').get(ensureAuthenticated, (req, res) => {
   res.render('pug/profile');
 })
-
 // app.route('/').get((req, res) => {
 //   res.render('pug/index', { title: 'Hello', message: 'Please login' });
 // });
