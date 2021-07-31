@@ -26,13 +26,14 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 myDB(async client => {
-  const myDateBase = await client.db('database').collection('users');
-  console.log('myDateBase:' + myDateBase.toString());
+  const myDataBase = await client.db('database').collection('users');
+  console.log('myDataBase:' + myDataBase.toString());
 
   app.route('/').get((req, res) => {
     res.render('pug', {
       title: 'Connected to Database',
       message: 'Please login',
+      showLogin: true,
     })
   })
 
@@ -48,15 +49,15 @@ myDB(async client => {
 
   passport.use(new LocalStrategy(
     function (username, password, done) {
-      myDataBase.findOne({ username: username }, function (err, user){
-        console.log('User ' + username + 'attempted to log in.');
-        if(err) return done(err);
-        if(!user) return done(null, false);
-        if(password !== user.password) return done(null, false);
+      myDataBase.findOne({ username: username }, function (err, user) {
+        console.log('User ' + username + ' attempted to log in.');
+        if (err) return done(err);
+        if (!user) return done(null, false);
+        if (password !== user.password) return done(null, false);
         return done(null, user);
       });
     }
-  ))
+  ));
 
 }).catch(e => {
   app.route('/').get((req, res) => {
@@ -68,6 +69,14 @@ fccTesting(app); //For FCC testing purposes
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.route('/login').post(passport.authenticate('local', { failureRedirect: '/' }), (req, res) => {
+  console.log('POST routed!');
+  res.redirect('/profile');
+});
+app.get('/profile', (req, res) => {
+  res.render('pug/profile');
+})
 
 // app.route('/').get((req, res) => {
 //   res.render('pug/index', { title: 'Hello', message: 'Please login' });
