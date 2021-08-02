@@ -7,6 +7,7 @@ const session = require('express-session');
 const passport = require('passport');
 const { ObjectID } = require('mongodb');
 const LocalStrategy = require('passport-local');
+const bcrypt = require('bcrypt');
 // const pug = require('pug');
 
 const app = express();
@@ -56,7 +57,8 @@ myDB(async client => {
         } else if (user) {
           res.redirect('/');
         } else {
-          myDataBase.insertOne({ username: req.body.username, password: req.body.password }, (err, doc) => {
+          const hash=bcrypt.hashSync(req.body.password, 12);
+          myDataBase.insertOne({ username: req.body.username, password: hash }, (err, doc) => {
             if (err) {
               res.redirect('/');
             } else {
@@ -92,7 +94,7 @@ myDB(async client => {
         console.log('User ' + username + ' attempted to log in.');
         if (err) return done(err);
         if (!user) return done(null, false);
-        if (password !== user.password) return done(null, false);
+        if (!bcrypt.compareSync(password, user.password)) return done(null, false);
         return done(null, user);
       });
     }
@@ -112,7 +114,7 @@ app.use(express.urlencoded({ extended: true }));
 // app.use((req, res, next) => {res.status(404).type('text').send('Not Found')});
 
 app.route('/login').post(passport.authenticate('local', { failureRedirect: '/' }), (req, res) => {
-  console.log('POST routed!');
+  console.log('Login Success!');
   res.redirect('/profile');
 });
 
