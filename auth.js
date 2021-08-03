@@ -33,7 +33,7 @@ module.exports = function (app, myDataBase) {
 
 	passport.use(new GithubStrategy(
 		{
-			clientID: process.env.GITHUB_CLIENT.ID,
+			clientID: process.env.GITHUB_CLIENT_ID,
 			clientSecret: process.env.GITHUB_CLIENT_SECRET,
 			callbackURL: 'https://wiz.codes/auth/github/callback',
 		},
