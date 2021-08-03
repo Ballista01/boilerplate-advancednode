@@ -1,5 +1,6 @@
 const passport = require('passport');
 const bcrypt = require('bcrypt');
+const { authenticate } = require('passport');
 
 function ensureAuthenticated(req, res, next) {
 	if (req.isAuthenticated()) {
@@ -15,6 +16,7 @@ module.exports = function (app, myDataBase) {
 			message: 'Please login',
 			showLogin: true,
 			showRegistration: true,
+			showSocialAuth: true,
 		})
 	})
 
@@ -53,12 +55,21 @@ module.exports = function (app, myDataBase) {
 		}
 	);
 
+	app.route('/auth/github').get(passport.authenticate('github', { failureRedirect: '/' }));
+	app.route('/auth/github/callback').get(passport.authenticate('github', { failureRedirect: '/' }),
+		(req, res) => {
+			res.redirect('/profile');
+		}
+	);
+
 	// app.use((req, res, next) => {
 	//   res.status(404).type('text').send('Not Found');
 	// })
-	
+
 	app.route('/login').post(passport.authenticate('local', { failureRedirect: '/' }), (req, res) => {
-		console.log('Login Success!');
+		console.log('Local Login Success!');
 		res.redirect('/profile');
 	});
+
+
 }

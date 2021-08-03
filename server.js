@@ -5,9 +5,6 @@ const myDB = require('./connection');
 const fccTesting = require('./freeCodeCamp/fcctesting.js');
 const session = require('express-session');
 const passport = require('passport');
-const { ObjectID } = require('mongodb');
-const LocalStrategy = require('passport-local');
-const bcrypt = require('bcrypt');
 const routes = require('./routes.js');
 const auth = require('./auth');
 // const pug = require('pug');
@@ -32,8 +29,8 @@ myDB(async client => {
   const myDataBase = await client.db('database').collection('users');
   console.log('myDataBase:' + myDataBase.toString());
 
-  routes(app, myDataBase);
   auth(app, myDataBase);
+  routes(app, myDataBase);
 
 }).catch(e => {
   app.route('/').get((req, res) => {
