@@ -35,7 +35,7 @@ module.exports = function (app, myDataBase) {
 		callbackURL: "https://wiz.codes/auth/github/callback",
 	},
 	function(accessToken, refreshToken, profile, done){
-		User.findOrCreate({ githubId: profile.id }, function (err, user){
+		myDataBase.findOrCreate({ username: profile.id }, function (err, user){
 			return done(err, user);
 		});
 	}
