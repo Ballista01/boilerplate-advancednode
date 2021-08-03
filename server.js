@@ -30,11 +30,14 @@ app.use(passport.session());
 myDB(async client => {
   const myDataBase = await client.db('database').collection('users');
   console.log('myDataBase:' + myDataBase.toString());
+
+  let currentUsers = 0;
   io.on('connection', socket => {
+    ++currentUsers;
+    io.emit('user count', currentUsers);
     console.log('A user has connected');
   });
 
-  console.log(process.cwd());
   auth(app, myDataBase);
   routes(app, myDataBase);
 
