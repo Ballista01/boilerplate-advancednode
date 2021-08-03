@@ -11,6 +11,8 @@ const auth = require('./auth');
 
 const app = express();
 app.set('view engine', 'pug');
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 
 // initialize session
 app.use(session({
@@ -28,6 +30,9 @@ app.use(passport.session());
 myDB(async client => {
   const myDataBase = await client.db('database').collection('users');
   console.log('myDataBase:' + myDataBase.toString());
+  io.on('connection', socket => {
+    console.log('A user has connected');
+  });
 
   auth(app, myDataBase);
   routes(app, myDataBase);
