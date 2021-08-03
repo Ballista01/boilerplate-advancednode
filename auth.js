@@ -3,6 +3,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const { ObjectID } = require('mongodb');
 const GitHubStrategy = require('passport-github2').Strategy;
+const { nextTick } = require('process');
 
 module.exports = function (app, myDataBase) {
 	// Serialization and deserialization here...
@@ -35,7 +36,7 @@ module.exports = function (app, myDataBase) {
 		callbackURL: "https://wiz.codes/auth/github/callback",
 	},
 	function(accessToken, refreshToken, profile, done){
-		myDataBase.findOrCreate({ username: profile.id }, function (err, user){
+		myDataBase.findOne({ username: profile.id }, function (err, user){
 			return done(err, user);
 		});
 	}
