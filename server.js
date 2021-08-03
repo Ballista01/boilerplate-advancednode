@@ -34,6 +34,7 @@ myDB(async client => {
     console.log('A user has connected');
   });
 
+  console.log(process.cwd());
   auth(app, myDataBase);
   routes(app, myDataBase);
 
