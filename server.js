@@ -74,8 +74,8 @@ myDB(async (client) => {
     });
 
     socket.on('chat message', msg => {
-      io.emit('chat message', msg);
-    })
+      io.emit('chat message', { name: socket.request.user.name, msg });
+    });
   });
 }).catch((e) => {
   app.route('/').get((req, res) => {
